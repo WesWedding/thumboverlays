@@ -1,0 +1,6 @@
+name = Thumbnail Overlays
+description = "Given a content type with Media Module images and videos, indicates when videos are missing a thumbnail image of the same filename."
+core = 7.x
+package = Sticky Modules
+dependancies[] = media
+scripts[] = js/thumboverlays_runonce.js

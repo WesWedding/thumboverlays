@@ -1,0 +1,21 @@
+<?php
+function thumboverlays_form_project_node_form_alter(&$form, &$form_state, $form_id) {
+   $form['#attached']['js'] = array(
+      drupal_get_path('module', 'thumboverlays') .'/js/thumboverlays.js',
+   );
+   $form['#attached']['css'] = array(
+      drupal_get_path('module', 'thumboverlays') .'/css/thumboverlays.css',
+   );
+}
+
+function thumboverlays_form_milestone_node_form_alter(&$form, &$form_state, $form_id) {
+   $form['#attached']['js'] = array(
+      drupal_get_path('module', 'thumboverlays') .'/js/thumboverlays.js',
+   );
+   $form['#attached']['css'] = array(
+      drupal_get_path('module', 'thumboverlays') .'/css/thumboverlays.css',
+   );
+}
+/*function thumboverlays_form_alter(&$form, &$form_state, $form_id) {
+   dsm($form_id);
+} */
