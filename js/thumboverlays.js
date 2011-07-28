@@ -45,7 +45,7 @@ function endlessMatchChecks(context, settings) {
    var imagefield = $('#edit-'+IMAGES_FIELD_NAME, context);
    
    var videos = $('.file-widget .file', videofield);
-   var images = $('.image-widget .image-preview img', imagefield);
+   var images = $('.image-widget .image-widget-data .file', imagefield);
    unFlagFiles(videos, images);
    flagMatchedFiles(videos, images);
 } 
@@ -89,13 +89,16 @@ function flagMatchedFiles(videos, images) {
       var videoname = extractVidName(video);
       //search for related image
       $.each(images, function(ikey, image) {
-         var imagename = image.src.replace(/.*\//,''); //get base filename
-         imagename = imagename.substr(0, imagename.lastIndexOf('.'));
+         //var imagename = image.src.replace(/.*\//,''); //get base filename
+         var imagename = extractImgName(image);
+         //imagename = imagename.substr(0, imagename.lastIndexOf('.'));
          if (videoname == imagename) {
 //            tagVideos.push(video);
 //            tagImages.push(image);
             vidThumbs.push(video);
-            thumbs.push(image);
+            //The actual thumbnail is in front of this image element.
+            var actualThumb = getThumbnail(image);
+            thumbs.push(actualThumb);
             matchFound = true;
          }
       }); 
@@ -118,10 +121,19 @@ function flagMatchedFiles(videos, images) {
    //This loop is used to add thumbnail overlays to videos with matching image thumbnails
    for (x in vidThumbs) {
       var temp = thumbs[x];
-      addThumbOverlay(vidThumbs[x], thumbs[x].src, "thumbnail-matched");
+      addThumbOverlay(vidThumbs[x], temp.src, "thumbnail-matched");
    }
    
 }
+
+function getThumbnail(image) {
+   //find the thumbnail of this given image.
+   //This can vary greatly depending on our module usage.
+   var previewImage = $(image).parent().siblings('.image-preview');
+   return $('img', previewImage)[0];
+
+}
+
 
 /***
 ** Returns strings
@@ -133,7 +145,7 @@ function extractVidName(video) {
 }
 
 function extractImgName(image) {
-   var tempname = image.src.replace(/.*\//,'');
+   var tempname = $('a', image).text();
    return tempname.substr(0, tempname.lastIndexOf('.'));
 }
 
@@ -147,15 +159,18 @@ function addThumbOverlay(div,overlayImage, classname) {
    //An image might be a complete URL, so we need to account for this.
    //Doesn't currently account for other URL information and makes assumptions about module paths
    //@TODO: Add module behavior that puts the module path into Drupal.settings and reference it
-   if (overlayImage.search(/^http/))
-      prepend = Drupal.settings.basePath;
-   $(div).before('<span class="'+classname+'"><img src="'+prepend+overlayImage+Drupal.settings.thumboverlays.path+'" /></span>');
+   if (overlayImage.search(/^http/) < 0) {
+      prepend = Drupal.settings.basePath+Drupal.settings.thumboverlays.path;
+   }
+   //Special handling because 
+   //if (classname = "thumbnail-matched")
+   $(div).append('<span class="'+classname+'"><img src="'+prepend+overlayImage+'" /></span>');
 }
 
 function clearThumbOverlay(div, classname) {
-   if (typeof(classname) == undefined)
+   if (typeof(classname) == "undefined")
       classname = '.image-matched';
-   $(div).siblings(classname).remove();
+   $(div).children('.'+classname).remove();
 }
 
 function styleVideoThumb(video, classname) {

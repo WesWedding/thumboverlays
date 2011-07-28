@@ -3,7 +3,8 @@
 }
 
 .media-thumbnail,
-.field-name-field-asset-videos .field-items {
+.field-name-field-asset-videos .field-items,
+.file{
    position: relative;
 }
 
@@ -14,21 +15,30 @@
    width: 30px;
 }
 
-.thumbnail-missing {
-   position: absolute;
+.thumbnail-missing img {
+  /* position: absolute; */
    top: 0%;
    left: 0%;
    width: 30px;
    height: 30px;
-}
+} 
 
-.thumbnail-matched {
-   position: absolute;
-   top: 0%;
-   left: 0%;
-   width: 100%;
+.thumbnail-matched img {
+   /* position: absolute; */
+   /*top: 0%;
+   left: 0%; */
+   width: 50px;
    filter:alpha(opacity=80);
   -moz-opacity:0.8;
   -khtml-opacity: 0.8;
   opacity: 0.8;
+} 
+
+.thumbnail-matched,
+.thumbnail-missing {
+   display: inline;
+}
+
+.file-icon {
+   display: none;
 }

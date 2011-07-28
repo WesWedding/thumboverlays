@@ -1,8 +1,8 @@
 // Using the closure to map jQuery to $. 
 (function ($) {
 
-var VIDEOS_FIELD_NAME = "field-asset-videos";
-var IMAGES_FIELD_NAME = "field-project-images";
+var VIDEOS_FIELD_NAME = "field-wall-videos";
+var IMAGES_FIELD_NAME = "field-wall-images";
 
 
 /*************************************************/
@@ -43,7 +43,7 @@ function matchChecks(context, settings) {
    var videofield = $('.field-name-'+VIDEOS_FIELD_NAME, context);
    var imagefield = $('.field-name-'+IMAGES_FIELD_NAME, context);
    
-   var videos = $('.field-item label', videofield);
+   var videos = $('.field-item .file', videofield);
    var images = $('.field-item img', imagefield);
    //unFlagFiles(videos, images);
    flagMatchedFiles(videos, images);
@@ -89,12 +89,16 @@ function flagMatchedFiles(videos, images) {
       //search for related image
       $.each(images, function(ikey, image) {
          var imagename = image.src.replace(/.*\//,''); //get base filename
+         //replace bothersome %20 with spaces
+         imagename = imagename.replace(/%20/,' ');
          imagename = imagename.substr(0, imagename.lastIndexOf('.'));
          if (videoname == imagename) {
 //            tagVideos.push(video);
 //            tagImages.push(image);
             vidThumbs.push(video);
-            thumbs.push(image);
+            //The actual thumbnail is in front of this image element.
+            var actualThumb = getThumbnail(image);
+            thumbs.push(actualThumb);            
             matchFound = true;
          }
       }); 
@@ -122,23 +126,31 @@ function flagMatchedFiles(videos, images) {
    
 }
 
+
+function getThumbnail(image) {
+   //find the thumbnail of this given image.
+   //This can vary greatly depending on our module usage.
+   return image;
+}
+
+
 /***
 ** Returns strings
 **
 **/
 function extractVidName(video) {
-   var tempname = $(video).text();
+   var tempname = $('a', video).text();
    return tempname.substr(0, tempname.lastIndexOf('.'));
 }
 
 function extractImgName(image) {
-   var tempname = image.src.replace(/.*\//,'');
+   var tempname = $('a', image).text();
    return tempname.substr(0, tempname.lastIndexOf('.'));
 }
 
 /***
 *  Thumbnail overlay functions.  Not a lot to document here.
-*  This depends on the media module to work.
+*  This depends on the specific module we're using to work.
 *
 ***/
 function addThumbOverlay(div,overlayImage, classname) {
@@ -146,15 +158,18 @@ function addThumbOverlay(div,overlayImage, classname) {
    //An image might be a complete URL, so we need to account for this.
    //Doesn't currently account for other URL information and makes assumptions about module paths
    //@TODO: Add module behavior that puts the module path into Drupal.settings and reference it
-   if (overlayImage.search(/^http/))
-      prepend = Drupal.settings.basePath;
-   $(div).before('<span class="'+classname+'"><img src="'+prepend+Drupal.settings.thumboverlays.path+overlayImage+'" /></span>');
+   if (overlayImage.search(/^http/) < 0) {
+      prepend = Drupal.settings.basePath+Drupal.settings.thumboverlays.path;
+   }
+   //Special handling because 
+   //if (classname = "thumbnail-matched")
+   $(div).children('a').before('<span class="'+classname+'"><img src="'+prepend+overlayImage+'" /></span>');
 }
 
 function clearThumbOverlay(div, classname) {
    if (typeof(classname) == undefined)
       classname = '.image-matched';
-   $(div).siblings(classname).remove();
+   $(div).children(classname).remove();
 }
 
 function styleVideoThumb(video, classname) {
