@@ -44,7 +44,7 @@ function endlessMatchChecks(context, settings) {
    var videofield = $('#edit-'+VIDEOS_FIELD_NAME, context);
    var imagefield = $('#edit-'+IMAGES_FIELD_NAME, context);
    
-   var videos = $('.media-thumbnail label.media-filename', videofield);
+   var videos = $('.file-widget file', videofield);
    var images = $('.image-widget .image-preview img', imagefield);
    unFlagFiles(videos, images);
    flagMatchedFiles(videos, images);
@@ -128,7 +128,7 @@ function flagMatchedFiles(videos, images) {
 **
 **/
 function extractVidName(video) {
-   var tempname = $(video).text();
+   var tempname = $('a', video).text();
    return tempname.substr(0, tempname.lastIndexOf('.'));
 }
 
