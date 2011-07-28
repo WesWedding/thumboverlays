@@ -111,7 +111,7 @@ function flagMatchedFiles(videos, images) {
    //This loop is used to keep track of vids that need to be marked as error
    for (x in tagVideos) {
 //      styleVideoThumb(tagVideos[x], "matched");
-      addThumbOverlay(tagVideos[x], "imgbad.png", "thumbnail-missing");
+      addThumbOverlay(tagVideos[x], "notfound.png", "thumbnail-missing");
    }
    //This loop isn't used, but would mark a thumbnail image that matched a video
 /*   for (x in tagImages) {
