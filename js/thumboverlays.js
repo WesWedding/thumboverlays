@@ -44,7 +44,7 @@ function endlessMatchChecks(context, settings) {
    var videofield = $('#edit-'+VIDEOS_FIELD_NAME, context);
    var imagefield = $('#edit-'+IMAGES_FIELD_NAME, context);
    
-   var videos = $('.file-widget file', videofield);
+   var videos = $('.file-widget .file', videofield);
    var images = $('.image-widget .image-preview img', imagefield);
    unFlagFiles(videos, images);
    flagMatchedFiles(videos, images);
