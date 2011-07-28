@@ -149,7 +149,7 @@ function addThumbOverlay(div,overlayImage, classname) {
    //@TODO: Add module behavior that puts the module path into Drupal.settings and reference it
    if (overlayImage.search(/^http/))
       prepend = Drupal.settings.basePath;
-   $(div).before('<span class="'+classname+'"><img src="'+prepend+overlayImage+'" /></span>');
+   $(div).before('<span class="'+classname+'"><img src="'+prepend+overlayImage+Drupal.settings.thumboverlays.path+'" /></span>');
 }
 
 function clearThumbOverlay(div, classname) {
