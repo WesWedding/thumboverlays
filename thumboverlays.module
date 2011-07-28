@@ -27,6 +27,7 @@ function thumboverlays_form_milestone_node_form_alter(&$form, &$form_state, $for
 function thumboverlays_preprocess_node(&$variables) {
    switch($variables['type']) {
       case "project":
+      case "milestone":
          $path = drupal_get_path('module', 'thumboverlays');
          $settings['thumboverlays'] = array('path' => $path.'/images/');
          drupal_add_js($settings, 'setting');

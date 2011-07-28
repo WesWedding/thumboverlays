@@ -1,8 +1,8 @@
 // Using the closure to map jQuery to $. 
 (function ($) {
 
-var VIDEOS_FIELD_NAME = "field-asset-videos";
-var IMAGES_FIELD_NAME = "field-project-images";
+var VIDEOS_FIELD_NAME = "field-wall-videos";
+var IMAGES_FIELD_NAME = "field-wall-images";
 
 
 /*************************************************/
