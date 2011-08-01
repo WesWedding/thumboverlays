@@ -62,5 +62,4 @@ function setBehaviorsSettings($onEditForm) {
    $settings['thumboverlays']['path'] = $path.'/images/';
    $settings['thumboverlays']['editform']= $onEditForm;
    drupal_add_js($settings, 'setting');
-   dsm($settings);
 }
