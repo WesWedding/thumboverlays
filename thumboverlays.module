@@ -61,5 +61,16 @@ function setBehaviorsSettings($onEditForm) {
    $path = drupal_get_path('module', 'thumboverlays');
    $settings['thumboverlays']['path'] = $path.'/images/';
    $settings['thumboverlays']['editform']= $onEditForm;
+   $selectors = Array();
+   if ($onEditForm) {
+      $settings['thumboverlays']['prepend'] = '#edit-';
+      $settings['thumboverlays']['videoSelector'] = '.file-widget .file';
+      $settings['thumboverlays']['imageSelector'] = '.image-widget .image-widget-data .file';
+   }
+   else {
+      $settings['thumboverlays']['prepend'] = '.field-name-';
+      $settings['thumboverlays']['videoSelector'] = '.field-item .file';
+      $settings['thumboverlays']['imageSelector'] = '.field-item img';
+   }
    drupal_add_js($settings, 'setting');
 }

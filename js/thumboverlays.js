@@ -14,6 +14,8 @@ var IMAGES_FIELD_NAME = "field-wall-images";
 *  Our current use-case for a project is that a video has to have an associaed thumbnail.
 *  Until better options present themselves, we'll be using filenames to identify whether an uploaded
 *  image is a thumbnail for a video based on identical (excluding extension) filenames.
+*  The "overlay" aspect of this module is largely absent.  No images are being overlaid anymore
+*  after a module change.
 *
 ****/
   
@@ -21,19 +23,10 @@ var IMAGES_FIELD_NAME = "field-wall-images";
 Drupal.behaviors.detectRelated = {
       attach: function (context, settings) {  
          //endlessMatchChecks(context, settings);
-         var prepend = '';
-         var videoSelector = '';
-         var imageSelector = '';
-         if (settings.thumboverlays.editform) {
-            prepend = '#edit-';
-            videoSelector = '.file-widget .file';
-            imageSelector = '.image-widget .image-widget-data .file';
-         }
-         else {
-            prepend = '.field-name-';
-            videoSelector = '.field-item .file';
-            imageSelector = '.field-item img';
-         }            
+         var prepend = settings.thumboverlays.prepend;
+         var videoSelector = settings.thumboverlays.videoSelector;
+         var imageSelector = settings.thumboverlays.imageSelector;
+         
          var videofield = $(prepend+VIDEOS_FIELD_NAME, context);
          var imagefield = $(prepend+IMAGES_FIELD_NAME, context);
          
