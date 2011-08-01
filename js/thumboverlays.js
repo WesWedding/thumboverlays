@@ -120,6 +120,7 @@ function flagMatchedFiles(videos, images) {
       var temp = thumbs[x];
       //switch image preset for smaller thumbnail
       var path = temp.src.replace("wall_preview","video_thumb");
+      path = path.replace("thumbnail","video_thumb");
       addThumbOverlay(vidThumbs[x], path, "thumbnail-matched");
    }
    
