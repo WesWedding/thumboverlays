@@ -56,6 +56,8 @@ function unFlagFiles(videos, images) {
       clearThumbOverlay(video);
       clearThumbOverlay(video, "thumbnail-matched");
       clearThumbOverlay(video, "thumbnail-missing");
+      //removes the helper text
+      clearThumbOverlay(video, "thumbnail-text-warning");
    });
       
    $.each(images, function(key, image) {
@@ -119,8 +121,13 @@ function flagMatchedFiles(videos, images) {
    for (x in vidThumbs) {
       var temp = thumbs[x];
       //switch image preset for smaller thumbnail
-      var path = temp.src.replace("wall_preview","video_thumb");
-      path = path.replace("thumbnail","video_thumb");
+      var path = temp.src;
+      if(Drupal.settings.thumboverlays.editform) {
+         //There is a likliehood that a thumb and a vid get added at the same time.
+         // In this case, there won't be any video_thumb path for the new image yet.
+         path = temp.src;
+      }      
+      else path = path.replace("wall_preview","video_thumb");
       addThumbOverlay(vidThumbs[x], path, "thumbnail-matched");
    }
    
@@ -185,6 +192,7 @@ function clearThumbOverlay(div, classname) {
       classname = '.image-matched';
    $(div).children('.'+classname).remove();
 }
+
 
 function styleVideoThumb(video, classname) {
    $(video).parents('.media-item').addClass(classname);
