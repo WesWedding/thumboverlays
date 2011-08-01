@@ -3,4 +3,3 @@ description = "Given a content type with Media Module images and videos, indicat
 core = 7.x
 package = Sticky Modules
 dependancies[] = media
-scripts[] = js/thumboverlays_runonce.js

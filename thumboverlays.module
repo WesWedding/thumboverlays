@@ -1,7 +1,7 @@
 <?php
 function thumboverlays_form_project_node_form_alter(&$form, &$form_state, $form_id) {
 
-   $path = drupal_get_path('module', 'thumboverlays');
+/*   $path = drupal_get_path('module', 'thumboverlays');
    $settings['thumboverlays'] = array('path' => $path.'/images/');
    drupal_add_js($settings, 'setting');
    $form['#attached']['js'] = array(
@@ -9,11 +9,11 @@ function thumboverlays_form_project_node_form_alter(&$form, &$form_state, $form_
    );
    $form['#attached']['css'] = array(
       $path .'/css/thumboverlays.css',
-   );
+   ); */
 }
 
 function thumboverlays_form_milestone_node_form_alter(&$form, &$form_state, $form_id) {
-   $path = drupal_get_path('module', 'thumboverlays');
+/*   $path = drupal_get_path('module', 'thumboverlays');
    $settings['thumboverlays'] = array('path' => $path.'/images/');
    drupal_add_js($settings, 'setting');
    $form['#attached']['js'] = array(
@@ -21,24 +21,46 @@ function thumboverlays_form_milestone_node_form_alter(&$form, &$form_state, $for
    );
    $form['#attached']['css'] = array(
       drupal_get_path('module', 'thumboverlays') .'/css/thumboverlays.css',
-   );
-}
-/*function thumboverlays_form_alter(&$form, &$form_state, $form_id) {
-   dsm($form_id);
-} */
-
+   ); */
+} 
+function thumboverlays_form_alter(&$form, &$form_state, $form_id) {
+   switch ($form_id) {
+      case "milestone_node_form":
+      case "project_node_form":
+         $isEdit = true;
+         setBehaviorsSettings($isEdit);
+         $form['#attached']['js'] = array(
+            drupal_get_path('module', 'thumboverlays') .'/js/thumboverlays.js',
+         );
+         $form['#attached']['css'] = array(
+            drupal_get_path('module', 'thumboverlays') .'/css/thumboverlays.css',
+         );
+         break;
+      default:
+         //no nothing
+            break;
+   }
+} 
 
 function thumboverlays_preprocess_node(&$variables) {
    //dsm($variables['type']);
    switch($variables['type']) {
       case "project":
       case "milestone":
-         $path = drupal_get_path('module', 'thumboverlays');
-         $settings['thumboverlays'] = array('path' => $path.'/images/');
-         drupal_add_js($settings, 'setting');
+         $isEdit = false;
+         setBehaviorsSettings($isEdit);
          drupal_add_css(drupal_get_path('module', 'thumboverlays') . '/css/thumboverlays.css');
+         drupal_add_js(drupal_get_path('module', 'thumboverlays') . '/js/thumboverlays.js');
          break;
       default:
          break;
    }
+}
+
+function setBehaviorsSettings($onEditForm) {
+   $path = drupal_get_path('module', 'thumboverlays');
+   $settings['thumboverlays']['path'] = $path.'/images/';
+   $settings['thumboverlays']['editform']= $onEditForm;
+   drupal_add_js($settings, 'setting');
+   dsm($settings);
 }

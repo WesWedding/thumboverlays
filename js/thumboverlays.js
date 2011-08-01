@@ -13,42 +13,45 @@ var IMAGES_FIELD_NAME = "field-wall-images";
 /***
 *  Our current use-case for a project is that a video has to have an associaed thumbnail.
 *  Until better options present themselves, we'll be using filenames to identify whether an uploaded
-*  image is a thumbnail for a video based on identical (excluding extension filenames.
+*  image is a thumbnail for a video based on identical (excluding extension) filenames.
 *
 ****/
   
   
 Drupal.behaviors.detectRelated = {
       attach: function (context, settings) {  
-         endlessMatchChecks(context, settings);
+         //endlessMatchChecks(context, settings);
+         var prepend = '';
+         var videoSelector = '';
+         var imageSelector = '';
+         if (settings.thumboverlays.editform) {
+            prepend = '#edit-';
+            videoSelector = '.file-widget .file';
+            imageSelector = '.image-widget .image-widget-data .file';
+         }
+         else {
+            prepend = '.field-name-';
+            videoSelector = '.field-item .file';
+            imageSelector = '.field-item img';
+         }            
+         var videofield = $(prepend+VIDEOS_FIELD_NAME, context);
+         var imagefield = $(prepend+IMAGES_FIELD_NAME, context);
+         
+         var videos = $(videoSelector, videofield);
+         var images = $(imageSelector, imagefield);
+         unFlagFiles(videos, images);
+         flagMatchedFiles(videos, images);         
       }  
   };
   
    //A little sloppy but this does the trick.  Media module fails to trigger drupal behaviors
    //like other dynamically added form elements.  (see below)
    
-   setInterval(Drupal.behaviors.detectRelated.attach, 500);  
-
-/***
-*  This function is endless because it'll be getting called endlessly on a given node form this
-*  file is included on.  Should be a hint not to include this anywhere you don't want this behavior.
-*
-*  We'll be clearing any existing formatting on the videos and images (that we've placed) and re-
-*  applying them as necessary each pass over the DOM.
-*   
-*  This is sort of garbage and should be handled by Drupal.behaviors' attach but Media Module
-*  never calls attach when it dynamically updates the page.
-***/
-
-function endlessMatchChecks(context, settings) {
-   var videofield = $('#edit-'+VIDEOS_FIELD_NAME, context);
-   var imagefield = $('#edit-'+IMAGES_FIELD_NAME, context);
+   //UPDATE: We switched to just using the File and Image modules, both of which have the expected
+   // Drupal.attach behaviors when updating the DOM.  No more messy setInterval repeats
    
-   var videos = $('.file-widget .file', videofield);
-   var images = $('.image-widget .image-widget-data .file', imagefield);
-   unFlagFiles(videos, images);
-   flagMatchedFiles(videos, images);
-} 
+//   setInterval(Drupal.behaviors.detectRelated.attach, 500);  
+
 
 /***
 *  Go through each videos object and images object and get rid of our styles and any overlay divs
@@ -71,7 +74,8 @@ function unFlagFiles(videos, images) {
 *  Function is a little messy because it has gone through a few different goals.  
 *  Currently:  If a video has the same name as an image, overlay that image as a thumbnail on
 *  the video.
-*     Also, if a video has no matching thumbnail image then flag it with an error.
+*     Also, if a video has no matching thumbnail image then flag it with an error (display a "missing
+*     thumbnail" image and some helper text to explain that no thumbnail was found.)
 *
 ****/
 
@@ -89,9 +93,7 @@ function flagMatchedFiles(videos, images) {
       var videoname = extractVidName(video);
       //search for related image
       $.each(images, function(ikey, image) {
-         //var imagename = image.src.replace(/.*\//,''); //get base filename
          var imagename = extractImgName(image);
-         //imagename = imagename.substr(0, imagename.lastIndexOf('.'));
          if (videoname == imagename) {
 //            tagVideos.push(video);
 //            tagImages.push(image);
@@ -112,6 +114,8 @@ function flagMatchedFiles(videos, images) {
    for (x in tagVideos) {
 //      styleVideoThumb(tagVideos[x], "matched");
       addThumbOverlay(tagVideos[x], "notfound.png", "thumbnail-missing");
+      // add warning text
+      $(tagVideos[x]).children('a').after('<div class="thumbnail-text-warning">(No thumbnail image found)</div>');
    }
    //This loop isn't used, but would mark a thumbnail image that matched a video
 /*   for (x in tagImages) {
@@ -122,7 +126,7 @@ function flagMatchedFiles(videos, images) {
    for (x in vidThumbs) {
       var temp = thumbs[x];
       //switch image preset for smaller thumbnail
-      var path = temp.src.replace("thumbnail","video_thumb");
+      var path = temp.src.replace("wall_preview","video_thumb");
       addThumbOverlay(vidThumbs[x], path, "thumbnail-matched");
    }
    
@@ -131,9 +135,11 @@ function flagMatchedFiles(videos, images) {
 function getThumbnail(image) {
    //find the thumbnail of this given image.
    //This can vary greatly depending on our module usage.
-   var previewImage = $(image).parent().siblings('.image-preview');
-   return $('img', previewImage)[0];
-
+   if (Drupal.settings.thumboverlays.editform) {
+      var previewImage = $(image).parent().siblings('.image-preview');
+      return $('img', previewImage)[0];
+   }
+   else return image;
 }
 
 
@@ -143,24 +149,32 @@ function getThumbnail(image) {
 **/
 function extractVidName(video) {
    var tempname = $('a', video).text();
+   tempname = tempname.replace(/%20/,' ');
    return tempname.substr(0, tempname.lastIndexOf('.'));
 }
 
 function extractImgName(image) {
-   var tempname = $('a', image).text();
-   return tempname.substr(0, tempname.lastIndexOf('.'));
+   var imagename = null;
+   if (Drupal.settings.thumboverlays.editform) {
+      imagename = $('a', image).text();    
+   }
+   else {
+      imagename = image.src.replace(/.*\//,'');   
+   }   
+   //replace bothersome %20 with spaces
+   imagename = imagename.replace(/%20/,' ');     
+   return imagename.substr(0, imagename.lastIndexOf('.'));
 }
 
 /***
 *  Thumbnail overlay functions.  Not a lot to document here.
-*  This depends on the media module to work.
+*  This depends on the specific module we're using to work.
 *
 ***/
 function addThumbOverlay(div,overlayImage, classname) {
    var prepend = '';
    //An image might be a complete URL, so we need to account for this.
    //Doesn't currently account for other URL information and makes assumptions about module paths
-   //@TODO: Add module behavior that puts the module path into Drupal.settings and reference it
    if (overlayImage.search(/^http/) < 0) {
       prepend = Drupal.settings.basePath+Drupal.settings.thumboverlays.path;
    }
