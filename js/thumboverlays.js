@@ -121,7 +121,9 @@ function flagMatchedFiles(videos, images) {
    //This loop is used to add thumbnail overlays to videos with matching image thumbnails
    for (x in vidThumbs) {
       var temp = thumbs[x];
-      addThumbOverlay(vidThumbs[x], temp.src, "thumbnail-matched");
+      //switch image preset for smaller thumbnail
+      var path = temp.src.replace("thumbnail","video_thumb");
+      addThumbOverlay(vidThumbs[x], path, "thumbnail-matched");
    }
    
 }
@@ -164,7 +166,7 @@ function addThumbOverlay(div,overlayImage, classname) {
    }
    //Special handling because 
    //if (classname = "thumbnail-matched")
-   $(div).append('<span class="'+classname+'"><img src="'+prepend+overlayImage+'" /></span>');
+   $(div).prepend('<div class="'+classname+'"><img src="'+prepend+overlayImage+'" /></div>');
 }
 
 function clearThumbOverlay(div, classname) {

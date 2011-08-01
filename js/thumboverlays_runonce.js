@@ -112,6 +112,8 @@ function flagMatchedFiles(videos, images) {
    for (x in tagVideos) {
 //      styleVideoThumb(tagVideos[x], "matched");
       addThumbOverlay(tagVideos[x], "notfound.png", "thumbnail-missing");
+      // add warning text
+      $(tagVideos[x]).children('a').after('<div class="thumbnail-text-warning">(No thumbnail image found)</div>');
    }
    //This loop isn't used, but would mark a thumbnail image that matched a video
 /*   for (x in tagImages) {
@@ -121,7 +123,9 @@ function flagMatchedFiles(videos, images) {
    //This loop is used to add thumbnail overlays to videos with matching image thumbnails
    for (x in vidThumbs) {
       var temp = thumbs[x];
-      addThumbOverlay(vidThumbs[x], thumbs[x].src, "thumbnail-matched");
+      //switch image preset for smaller thumbnail
+      var path = temp.src.replace("wall_preview","video_thumb");
+      addThumbOverlay(vidThumbs[x], path, "thumbnail-matched");
    }
    
 }
@@ -163,7 +167,7 @@ function addThumbOverlay(div,overlayImage, classname) {
    }
    //Special handling because 
    //if (classname = "thumbnail-matched")
-   $(div).children('a').before('<span class="'+classname+'"><img src="'+prepend+overlayImage+'" /></span>');
+   $(div).children('a').before('<div class="'+classname+'"><img src="'+prepend+overlayImage+'" /></div>');
 }
 
 function clearThumbOverlay(div, classname) {

@@ -1,44 +1,35 @@
-.media-item.matched {
-   background: red;
-}
-
-.media-thumbnail,
-.field-name-field-asset-videos .field-items,
-.file{
-   position: relative;
-}
-
-.image-matched {
-   position: absolute;
-   top: 0%;
-   left: 0%;
-   width: 30px;
-}
-
-.thumbnail-missing img {
-  /* position: absolute; */
-   top: 0%;
-   left: 0%;
-   width: 30px;
-   height: 30px;
-} 
-
-.thumbnail-matched img {
-   /* position: absolute; */
-   /*top: 0%;
-   left: 0%; */
-   width: 50px;
-   filter:alpha(opacity=80);
-  -moz-opacity:0.8;
-  -khtml-opacity: 0.8;
-  opacity: 0.8;
-} 
-
 .thumbnail-matched,
 .thumbnail-missing {
-   display: inline;
+  display: table-cell;
+  width: 60px;
+  height: 45px;
+  padding: 1px;
+  text-align: center;
+  background-color: #D3D7D9;
+  vertical-align: middle;
+  line-height: 0;
+  margin-bottom: .5em;
+}
+.file a {
+  display: table-cell;
+  vertical-align: middle;
+  padding-left: 8px;
+}
+
+.thumbnail-text-warning {
+  display: table-cell;
+  vertical-align: middle;
+  color: red;
+  font-style: italic;
+  padding-left: 8px;
+  font-size: .9em;
 }
 
 .file-icon {
    display: none;
+}
+
+.field-item .file {
+  display: block;
+  margin-bottom: 1em;
 }
