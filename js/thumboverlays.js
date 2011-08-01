@@ -157,18 +157,21 @@ function extractVidName(video) {
    return tempname.substr(0, tempname.lastIndexOf('.'));
 }
 
+// This makes some assumptions about filenames and needs some clarification in design
 function extractImgName(image) {
    var imagename = null;
    if (Drupal.settings.thumboverlays.editform) {
       imagename = $('a', image).text();    
    }
    else {
-      imagename = image.src.replace(/.*\//,'');   
+      imagename = image.src.replace(/.*\//,'');   //trims out everything before and including the last slash"
+      imagename = imagename.replace(/_\d*/, '');
    }   
    //replace bothersome %20 with spaces
    imagename = imagename.replace(/%20/,' ');     
    return imagename.substr(0, imagename.lastIndexOf('.'));
 }
+
 
 /***
 *  Thumbnail overlay functions.  Not a lot to document here.
