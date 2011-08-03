@@ -42,6 +42,10 @@
   margin-bottom: 1em;
 }
 
-.image-widget-data {
-   padding-top: 20px;
+.image-widget .image-widget-data {
+   padding-top: 30px;
+}
+
+.image-widget .image-preview {
+   display: inline-block;
 }
