@@ -125,6 +125,7 @@ function flagMatchedFiles(videos, images) {
       if(Drupal.settings.thumboverlays.editform) {
          //There is a likliehood that a thumb and a vid get added at the same time.
          // In this case, there won't be any video_thumb path for the new image yet.
+         // TODO: Preferred way to handle?
          path = temp.src;
       }      
       else path = path.replace("wall_preview","video_thumb");
