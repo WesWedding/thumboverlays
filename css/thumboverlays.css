@@ -2,20 +2,25 @@
 .thumbnail-missing {
   display: inline-block;
   width: 60px;
- /* height: 45px; */
+  height: 45px;
   padding: 1px;
   text-align: center;
   background-color: #D3D7D9;
   vertical-align: middle;
   line-height: 0;
   margin-bottom: .5em;
-  padding-top: 10px;
-  padding-bottom: 10px;
+  overflow: hidden;
+  /*padding-top: 10px; */
+  /*padding-bottom: 10px; */
+  padding: 0px;
 }
 
 .thumbnail-matched img {
-   vertical-align: middle;
-   width: 40px; 
+   width: 100%;
+}
+
+.thumbnail-missing img {
+   margin-top: 6px;
 }
 
 .file a {
