@@ -7,8 +7,6 @@ function thumboverlays_form_alter(&$form, &$form_state, $form_id) {
          $isEdit = true;
          setBehaviorsSettings($isEdit);
          $form['#attached']['js'][] = drupal_get_path('module', 'thumboverlays') .'/js/thumboverlays.js';
-         $form['#attached']['css'][] = drupal_get_path('module', 'thumboverlays') .'/css/thumboverlays.css';
-         dsm($form);
          break;
       default:
          //no nothing
