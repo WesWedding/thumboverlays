@@ -6,12 +6,9 @@ function thumboverlays_form_alter(&$form, &$form_state, $form_id) {
       case "project_node_form":
          $isEdit = true;
          setBehaviorsSettings($isEdit);
-         $form['#attached']['js'] = array(
-            drupal_get_path('module', 'thumboverlays') .'/js/thumboverlays.js',
-         );
-         $form['#attached']['css'] = array(
-            drupal_get_path('module', 'thumboverlays') .'/css/thumboverlays.css',
-         );
+         $form['#attached']['js'][] = drupal_get_path('module', 'thumboverlays') .'/js/thumboverlays.js';
+         $form['#attached']['css'][] = drupal_get_path('module', 'thumboverlays') .'/css/thumboverlays.css';
+         dsm($form);
          break;
       default:
          //no nothing
